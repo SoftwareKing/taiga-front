@@ -4,20 +4,19 @@
         ng-repeat="tag in vm.tags"
         ng-style="{'border-left': '.3rem solid' + tag.color}"
     )
-        //- loading-remove-tag="{{vm.loadingRemoveTag}}"
         tg-tag(
             tag="tag"
             project="vm.project"
+            on-delete-tag="vm.deleteTag(tag)"
             has-permissions="{{vm.checkPermissions()}}"
         )
     .tag(
         ng-if="!tag.color"
         ng-repeat="tag in vm.tags"
     )
-        //- loading-remove-tag="{{vm.loadingRemoveTag}}"
         tg-tag(
             tag="tag"
-            on-delete-tag="vm.onDeleteTag(tag)"
+            on-delete-tag="vm.deleteTag(tag)"
             has-permissions="{{vm.checkPermissions()}}"
         )
 

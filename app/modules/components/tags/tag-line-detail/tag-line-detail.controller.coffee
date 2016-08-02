@@ -53,9 +53,11 @@ class TagLineController
 
     onDeleteTag: (tag) ->
         @.loadingRemoveTag = tag.name
-        onDeleteTagSuccess = () =>
+        onDeleteTagSuccess = (item) =>
             @rootScope.$broadcast("object:updated")
             @.loadingRemoveTag = false
+
+            return item
 
         onDeleteTagError = () =>
             @confirm.notify("error")
@@ -65,39 +67,44 @@ class TagLineController
         transform = @modelTransform.save (item) ->
             tags = _.clone(item.tags, false)
             item.tags = _.pull(tags, tagName)
+
             return item
 
         return transform.then(onDeleteTagSuccess, onDeleteTagError)
 
-    onAddTag: (tag, color, project) ->
+    onAddTag: (tag, color) ->
         @.loadingAddTag = true
+
         if !color
             color = null
 
         newTag = [tag, color]
 
-        onAddTagSuccess = (project) =>
-            project.tags_colors[tag] = color
+        onAddTagSuccess = (item) =>
+            @.project.tags_colors[tag] = color
             @rootScope.$broadcast("object:updated") #its a kind of magic.
             @.addTag = false
             @.loadingAddTag = false
 
+            return item
+
         onAddTagError = () =>
-            @.loadAddTag = false
+            @.loadingAddTag = false
             @confirm.notify("error")
 
-        transform = @modelTransform.save (item) ->
+        transform = @modelTransform.save (item) =>
             if not item.tags
                 item.tags = []
 
             if not item.tags
-                project.tags_colors = {}
+                @.project.tags_colors = {}
 
             tags = _.clone(item.tags)
-            tags.push(newTag) if tag.name not in tags
+            tags.push(newTag) if tag not in tags
+
             item.tags = tags
             return item
 
-        return transform.then(onAddTagSuccess(project), onAddTagError)
+        return transform.then(onAddTagSuccess, onAddTagError)
 
 module.controller("TagLineCtrl", TagLineController)

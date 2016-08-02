@@ -37,7 +37,7 @@ describe "TagLineDetail", ->
             $broadcast: sinon.stub()
         }
 
-        provide.value "rootScope", mocks.rootScope
+        provide.value "$rootScope", mocks.rootScope
 
     _mockTgConfirm = () ->
         mocks.tgConfirm = {
@@ -114,13 +114,6 @@ describe "TagLineDetail", ->
         TagLineController.closeTagInput(event)
         expect(TagLineController.addTag).to.be.false
 
-
-    # TODO: To be reviewed
-    # Also missing:
-    #   Delete tag error
-    #   Add tag success
-    #   Add tag error
-
     it "on delete tag success", (done) ->
         tag = {
             name: 'tag1'
@@ -132,11 +125,87 @@ describe "TagLineDetail", ->
             tags: ['tag1', 'tag2', 'tag3']
         }
 
-        promise = mocks.tgQueueModelTransformation.save.promise().resolve(item)
+        mocks.tgQueueModelTransformation.save.callsArgWith(0, item)
+        mocks.tgQueueModelTransformation.save.promise().resolve(item)
+
         TagLineController.onDeleteTag(tag).then (item) ->
             expect(tagName).to.be.equal(tag.name)
-            expect(tags).to.be.equal(item.tags)
-            expect(item.tags).to.be.equal(['tag2', 'tag3'])
+            expect(item.tags).to.be.eql(['tag2', 'tag3'])
             expect(TagLineController.loadingRemoveTag).to.be.false
-            # expect(mocks.rootScope.$broadcast).to.be.calledWith("object:updated")
+            expect(mocks.rootScope.$broadcast).to.be.calledWith("object:updated")
+            done()
+
+    it "on delete tag error", (done) ->
+        tag = {
+            name: 'tag1'
+        }
+
+        mocks.tgQueueModelTransformation.save.promise().reject(new Error('error'))
+
+        TagLineController.onDeleteTag(tag).finally () ->
+            expect(TagLineController.loadingRemoveTag).to.be.false
+            expect(mocks.tgConfirm.notify).to.be.calledWith("error")
+            done()
+
+    it "on add tag success", (done) ->
+        tag = 'tag1'
+        tagColor = '#eee'
+
+        tags = ['tag2', 'tag3']
+
+        item = {
+            tags: ['tag2', 'tag3']
+        }
+
+        mockPromise = mocks.tgQueueModelTransformation.save.promise()
+
+        TagLineController.project = {
+            tags_colors: {}
+        }
+
+        mocks.tgQueueModelTransformation.save.callsArgWith(0, item)
+        promise = TagLineController.onAddTag(tag, tagColor)
+
+        expect(TagLineController.loadingAddTag).to.be.true
+
+        mockPromise.resolve(item)
+
+        promise.then (item) ->
+            expect(item.tags).to.be.eql(['tag2', 'tag3', ['tag1', '#eee']])
+            expect(mocks.rootScope.$broadcast).to.be.calledWith("object:updated")
+            expect(TagLineController.addTag).to.be.false
+            expect(TagLineController.loadingAddTag).to.be.false
+            expect(TagLineController.project.tags_colors).to.be.eql({'tag1': '#eee'})
+
+            done()
+
+    it "on add tag error", (done) ->
+        tag = 'tag1'
+        tagColor = '#eee'
+        project = {
+            tags_colors: {}
+        }
+
+        tags = ['tag2', 'tag3']
+
+        item = {
+            tags: ['tag2', 'tag3']
+        }
+
+        mockPromise = mocks.tgQueueModelTransformation.save.promise()
+
+        TagLineController.project = {
+            tags_colors: {}
+        }
+
+        mocks.tgQueueModelTransformation.save.callsArgWith(0, item)
+        promise = TagLineController.onAddTag(tag, tagColor)
+
+        expect(TagLineController.loadingAddTag).to.be.true
+
+        mockPromise.reject(new Error('error'))
+
+        promise.then (item) ->
+            expect(TagLineController.loadingAddTag).to.be.false
+            expect(mocks.tgConfirm.notify).to.be.calledWith("error")
             done()

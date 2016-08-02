@@ -23,11 +23,13 @@ TagLineCommonDirective = () ->
 
     link = (scope, el, attr, ctrl) ->
         scope.$watchCollection "vm.type.tags", (tags) ->
-            return if not tags.length
+            return if !tags || !tags.length
+
             ctrl.tags = ctrl._renderTags(tags, ctrl.project)
 
         unwatch = scope.$watch "vm.project", (project) ->
-            return if not Object.keys(project).length
+            return if !project || !Object.keys(project).length
+
             unwatch()
             ctrl.colorArray = ctrl._createColorsArray(ctrl.project.tags_colors)
 
@@ -36,7 +38,9 @@ TagLineCommonDirective = () ->
         scope: {
             permissions: "@",
             type: "=",
-            project: "="
+            project: "=",
+            onAddTag: "&",
+            onDeleteTag: "&"
         },
         templateUrl:"components/tags/tag-line-common/tag-line-common.html",
         controller: "TagLineCommonCtrl",

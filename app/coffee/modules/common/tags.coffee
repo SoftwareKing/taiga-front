@@ -63,7 +63,7 @@ ColorizeTagsDirective = ->
         backlog: _.template("""
         <% _.each(tags, function(tag) { %>
             <span class="tag"
-                <% if (tag.color === null or tag.color == undefined) { %>
+                <% if (tag.color === null || tag.color == undefined) { %>
                     style="border-left: 5px solid <%- tag.color %>"
                 <% } %>
                 title="<%- tag.name %>"><%- tag.name %></span>
@@ -73,7 +73,7 @@ ColorizeTagsDirective = ->
         <% _.each(tags, function(tag) { %>
             <a class="kanban-tag"
                 href=""
-                <% if (tag.color === null or tag.color == undefined) { %>
+                <% if (tag.color === null || tag.color == undefined) { %>
                     style="border-color: <%- tag.color %>"
                 <% } %>
                 title="<%- tag.name %>" />
@@ -83,7 +83,7 @@ ColorizeTagsDirective = ->
         <% _.each(tags, function(tag) { %>
             <a class="taskboard-tag"
                 href=""
-                <% if (tag.color === null or tag.color == undefined) { %>
+                <% if (tag.color === null || tag.color == undefined) { %>
                     style="border-color: <%- tag.color %>"
                 <% } %>
                 title="<%- tag.name %>" />
@@ -239,7 +239,7 @@ module.directive("tgLbTagLine", ["$tgResources", "$tgTemplate", "$compile", LbTa
 #############################################################################
 ## TagLine  Directive (for detail pages)
 #############################################################################
-# 
+#
 # TagLineDirective = ($rootScope, $repo, $rs, $confirm, $modelTransform, $template, $compile) ->
 #     ENTER_KEY = 13
 #     ESC_KEY = 27

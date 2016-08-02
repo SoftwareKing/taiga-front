@@ -65,7 +65,7 @@ div.wrapper(
                             )
             .subheader
                 tg-tag-line.tags-block(
-                    ng-if="issue"
+                    ng-if="issue && project"
                     type="issue"
                     permissions="modify_issue"
                     project="project"
@@ -93,7 +93,7 @@ div.wrapper(
             project-id="projectId"
             edit-permission = "modify_issue"
         )
-        
+
         tg-history-section(
             ng-if="issue"
             type="issue"

@@ -76,7 +76,7 @@ div.wrapper(
                             tg-svg(svg-icon="icon-arrow-right")
             .subheader
                 tg-tag-line.tags-block(
-                    ng-if="task"
+                    ng-if="task && project"
                     type="task"
                     permissions="modify_task"
                     project="project"
@@ -99,7 +99,7 @@ div.wrapper(
             project-id="projectId"
             edit-permission = "modify_task"
         )
-        
+
         tg-history-section(
             ng-if="task"
             type="task"

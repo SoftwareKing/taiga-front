@@ -48,38 +48,39 @@ class TagLineCommonController
         if event.keyCode == 27
             @.addTag = false
 
-    ## UNCOMMON UTILITIES
+    # onAddTag: (tag, color) ->
+    #     @.loadingAddTag = true
+    #     value = trim(tag.toLowerCase())
 
-    onAddTag: (tag, color, project) ->
-        console.log tag, color, project
-        @.loadingAddTag = true
-        value = trim(tag.toLowerCase())
+    #     tags = @.project.tags
+    #     projectTags = @.project.tags_colors
 
-        tags = @.project.tags
-        projectTags = project.tags_colors
+    #     tags = [] if not tags?
+    #     projectTags = {} if not projectTags?
 
-        tags = [] if not tags?
-        projectTags = {} if not projectTags?
+    #     if value not in tags
+    #         tags.push(value)
 
-        if value not in tags
-            tags.push(value)
+    #     projectTags[tag] = color || null
 
-        projectTags[tag] = color || null
+    #     @.project.tags = tags
+    #     @.addTag = false
+    #     @.loadingAddTag = false
 
-        project.tags = tags
-        @.addTag = false
-        @.loadingAddTag = false
-        #Update Model
+    #     @.type.tags.push(tag)
 
-    onRemoveTag: (tag) ->
-        @.loadingRemoveTag = tag
-        value = trim(tag.toLowerCase())
+    # onDeleteTag: (tag) ->
+    #     @.loadingRemoveTag = tag.name
+    #     value = trim(tag.name.toLowerCase())
 
-        tags = @.project.tags
+    #     tags = @.project.tags
 
-        _.pull(tags, value)
+    #     _.pull(tags, value)
 
-        @.loadingRemoveTag = false
-        #Update Model
+    #     @.loadingRemoveTag = false
+
+    #     console.log @.type.tags
+    #     _.pull(@.type.tags, value)
+    #     console.log @.type.tags
 
 module.controller("TagLineCommonCtrl", TagLineCommonController)

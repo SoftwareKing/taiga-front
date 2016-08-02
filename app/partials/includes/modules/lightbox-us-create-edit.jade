@@ -25,9 +25,12 @@ form
 
     fieldset
         tg-tag-line-common.tags-block(
+            ng-if="project"
             project="project"
             type="us"
             permissions="add_us"
+            on-add-tag="addTag(name, color)"
+            on-delete-tag="deleteTag(tag)"
         )
 
     fieldset
